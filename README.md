@@ -1,2 +1,2 @@
-# Inducci-n_integra
+# Induccion_integra
 Repositorio de inducción institucional
