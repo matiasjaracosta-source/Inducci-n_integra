@@ -1,0 +1,1983 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Fundación Integra · Inducciones</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --navy:#2C4770; --navy2:#3d5a8a; --blue:#4A7CB5; --blue-lt:#6a9fd4;
+  --fin-bg:#C8E6C9;--fin-ft:#1B5E20;--fin-bdr:#66BB6A;
+  --cur-bg:#FFF9C4;--cur-ft:#E65100;--cur-bdr:#FFA726;
+  --inc-bg:#FFCDD2;--inc-ft:#B71C1C;--inc-bdr:#EF5350;
+  --real-bg:#D4EDDA;--real-ft:#1E6B34;
+  --pend-bg:#FFF3CD;--pend-ft:#856404;
+  --enpr-bg:#D1ECF1;--enpr-ft:#0C5460;
+  --post-bg:#F8D7DA;--post-ft:#721C24;
+  --napl-bg:#EFEFEF;--napl-ft:#5A5A5A;
+  --g1-bg:#EDE7F6;--g1-ft:#4527A0;
+  --g2-bg:#E3F2FD;--g2-ft:#0D47A1;
+  --g3-bg:#E8F5E9;--g3-ft:#1B5E20;
+  --g4-bg:#FFF8E1;--g4-ft:#E65100;
+  --bg:#EEF2F8;--surface:#fff;--border:#DDE3ED;
+  --text:#1A2535;--text2:#5A6A82;--text3:#8A9AB2;
+  --r:10px;--sh:0 2px 12px rgba(44,71,112,.07);--shm:0 6px 28px rgba(44,71,112,.13);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* HEADER */
+.hdr{
+  background:linear-gradient(135deg,#1f3460 0%,#2C4770 60%,#3d5a8a 100%);
+  padding:0 36px; height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:200;
+  box-shadow:0 2px 20px rgba(0,0,0,.22);
+}
+.hdr-l{display:flex;align-items:center;gap:14px}
+.hdr-icon{
+  width:36px;height:36px;border-radius:9px;
+  background:rgba(255,255,255,.13);
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+}
+.hdr-title h1{color:#fff;font-size:.95rem;font-weight:700;letter-spacing:-.01em}
+.hdr-title p{color:rgba(255,255,255,.52);font-size:.72rem;margin-top:1px}
+.hdr-date{font-family:'DM Mono',monospace;font-size:.68rem;color:rgba(255,255,255,.4)}
+
+/* PANEL INSTRUCCIONES ACTUALIZACIÓN */
+
+/* MAIN */
+.main{max-width:1440px;margin:0 auto;padding:28px 28px 60px}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.kpi{
+  background:var(--surface);border-radius:var(--r);
+  border:1px solid var(--border);box-shadow:var(--sh);
+  padding:20px 22px 18px;position:relative;overflow:hidden;
+  transition:transform .18s,box-shadow .18s;cursor:default;
+}
+.kpi:hover{transform:translateY(-3px);box-shadow:var(--shm)}
+.kpi::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:4px;border-radius:var(--r) var(--r) 0 0;
+}
+.kpi.total::after{background:linear-gradient(90deg,var(--blue),var(--blue-lt))}
+.kpi.fin::after  {background:linear-gradient(90deg,#2E7D32,#66BB6A)}
+.kpi.cur::after  {background:linear-gradient(90deg,#E65100,#FFA726)}
+.kpi.inc::after  {background:linear-gradient(90deg,#B71C1C,#EF5350)}
+.kpi-icon{font-size:1.3rem;margin-bottom:6px;display:block}
+.kpi-num{font-size:2.6rem;font-weight:700;line-height:1;letter-spacing:-.04em}
+.kpi.total .kpi-num{color:var(--navy)}
+.kpi.fin   .kpi-num{color:#2E7D32}
+.kpi.cur   .kpi-num{color:#E65100}
+.kpi.inc   .kpi-num{color:#B71C1C}
+.kpi-label{font-size:.78rem;font-weight:600;color:var(--text);margin-top:4px}
+.kpi-sub  {font-size:.68rem;color:var(--text3);margin-top:2px}
+
+/* SEGMENTADORES */
+.seg-panel{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);box-shadow:var(--sh);
+  padding:18px 22px 16px;margin-bottom:18px;
+}
+.seg-row{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-end}
+.seg-group{display:flex;flex-direction:column;gap:7px;flex:1;min-width:160px}
+.seg-label{
+  font-size:.65rem;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--text3);
+}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{
+  padding:5px 14px;border-radius:20px;font-size:.73rem;font-weight:600;
+  border:1.5px solid var(--border);background:var(--bg);color:var(--text2);
+  cursor:pointer;transition:all .14s;user-select:none;
+  font-family:'Outfit',sans-serif;
+}
+.chip:hover{border-color:var(--blue);color:var(--blue);background:#F0F6FF}
+.chip.on{background:var(--navy);color:#fff;border-color:var(--navy);box-shadow:0 2px 8px rgba(44,71,112,.22)}
+.chip.on.c-fin{background:var(--fin-ft);border-color:var(--fin-ft)}
+.chip.on.c-cur{background:var(--cur-ft);border-color:var(--cur-ft)}
+.chip.on.c-inc{background:var(--inc-ft);border-color:var(--inc-ft)}
+.chip.on.c-mes{background:var(--blue);border-color:var(--blue)}
+.chip.on.c-tipo{background:#37474F;border-color:#37474F}
+.chip.on.c-prof{background:#5E35B1;border-color:#5E35B1}
+.chip.on.c-grp1{background:#4527A0;border-color:#4527A0}
+.chip.on.c-grp2{background:#0D47A1;border-color:#0D47A1}
+.chip.on.c-grp3{background:#1B5E20;border-color:#1B5E20}
+.chip.on.c-grp4{background:#E65100;border-color:#E65100}
+
+.seg-divider{width:1px;background:var(--border);align-self:stretch;margin:0 4px}
+
+.btn-reset{
+  padding:7px 18px;border-radius:8px;border:1.5px solid var(--border);
+  background:none;font-family:'Outfit',sans-serif;font-size:.73rem;font-weight:600;
+  color:var(--text2);cursor:pointer;transition:all .14s;white-space:nowrap;
+}
+.btn-reset:hover{border-color:#B71C1C;color:#B71C1C}
+
+/* RESULT BAR */
+.rbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:0 2px}
+.rcount{font-size:.75rem;color:var(--text2);font-weight:500}
+.rcount strong{color:var(--navy);font-weight:700}
+
+/* TABLA */
+.tbl-outer{
+  background:var(--surface);border-radius:var(--r);
+  border:1px solid var(--border);box-shadow:var(--sh);
+}
+.tbl-scroll-top{
+  overflow-x:auto;overflow-y:hidden;height:18px;
+  border-radius:var(--r) var(--r) 0 0;
+  border-bottom:2px solid var(--border);
+  background:#E8EDF5;
+  cursor:ew-resize;
+}
+.tbl-scroll-top-inner{height:1px;pointer-events:none}
+.tbl-wrap{
+  overflow:auto;border-radius:0 0 var(--r) var(--r);
+}
+table{width:100%;border-collapse:collapse;font-size:.76rem}
+thead th{
+  background:var(--navy);color:#fff;font-weight:600;font-size:.67rem;
+  letter-spacing:.04em;text-transform:uppercase;
+  padding:11px 13px;text-align:left;white-space:nowrap;
+  position:sticky;top:0;border-right:1px solid rgba(255,255,255,.07);z-index:10;
+}
+thead th.th-etapa{background:var(--navy2);text-align:center}
+thead th:last-child{border-right:none}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+tbody tr:hover{background:#F5F8FD}
+tbody tr:last-child{border-bottom:none}
+tbody tr.hidden{display:none}
+td{padding:9px 13px;vertical-align:middle}
+td.tc{text-align:center}
+
+/* cells */
+.td-rut{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text3);white-space:nowrap}
+.td-nombre{font-weight:700;color:var(--navy);white-space:nowrap;font-size:.8rem}
+.td-sub{font-size:.67rem;color:var(--text2);margin-top:1px}
+.td-obs{font-size:.68rem;color:var(--text2);font-style:italic;max-width:180px}
+.td-fecha{font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text2);white-space:nowrap}
+
+/* badges */
+.bx{
+  display:inline-flex;align-items:center;gap:3px;
+  padding:3px 10px;border-radius:20px;font-size:.69rem;font-weight:700;white-space:nowrap;
+}
+.bx-fin {background:var(--fin-bg);color:var(--fin-ft)}
+.bx-cur {background:var(--cur-bg);color:var(--cur-ft)}
+.bx-inc {background:var(--inc-bg);color:var(--inc-ft)}
+.bx-real{background:var(--real-bg);color:var(--real-ft)}
+.bx-pend{background:var(--pend-bg);color:var(--pend-ft)}
+.bx-enpr{background:var(--enpr-bg);color:var(--enpr-ft)}
+.bx-post{background:var(--post-bg);color:var(--post-ft)}
+.bx-napl{background:var(--napl-bg);color:var(--napl-ft)}
+.bx-g1{background:var(--g1-bg);color:var(--g1-ft)}
+.bx-g2{background:var(--g2-bg);color:var(--g2-ft)}
+.bx-g3{background:var(--g3-bg);color:var(--g3-ft)}
+.bx-g4{background:var(--g4-bg);color:var(--g4-ft)}
+.bx-ext{background:#E8EAF6;color:#3949AB}
+.bx-int{background:#E0F2F1;color:#00695C}
+.bx-prof{background:#EDE7F6;color:#5E35B1}
+
+/* barra progreso */
+.prog{display:flex;align-items:center;gap:7px;min-width:80px}
+.pbar{flex:1;height:6px;background:var(--border);border-radius:4px;overflow:hidden}
+.pfill{height:100%;border-radius:4px;transition:width .3s}
+.pnum{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--text3);white-space:nowrap}
+
+/* vacío */
+.empty{text-align:center;padding:52px 24px;color:var(--text3)}
+.empty .ei{font-size:2.8rem;margin-bottom:10px}
+.empty p{font-size:.82rem}
+
+/* AVANCE ETAPAS (tabla resumen) */
+.etapa-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;
+}
+.etapa-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r);
+  box-shadow:var(--sh);padding:14px 16px;
+}
+.etapa-name{font-size:.72rem;font-weight:700;color:var(--navy);margin-bottom:10px}
+.etapa-bars{display:flex;flex-direction:column;gap:5px}
+.ebar-row{display:flex;align-items:center;gap:8px}
+.ebar-label{font-size:.65rem;color:var(--text2);width:72px;text-align:right;flex-shrink:0}
+.ebar-track{flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden}
+.ebar-fill{height:100%;border-radius:4px}
+.ebar-num{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--text3);width:18px;flex-shrink:0}
+
+@media(max-width:960px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .etapa-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+  .kpi-grid{grid-template-columns:1fr 1fr}
+  .etapa-grid{grid-template-columns:1fr}
+  .hdr{padding:0 16px}
+  .main{padding:16px 12px 48px}
+}
+
+/* ── BOTÓN FICHA ── */
+.btn-ficha{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:4px 11px;border-radius:6px;font-size:.68rem;font-weight:700;
+  background:#E3F2FD;color:#0D47A1;border:1px solid #BBDEFB;
+  cursor:pointer;transition:all .14s;white-space:nowrap;font-family:'Outfit',sans-serif;
+}
+.btn-ficha:hover{background:#0D47A1;color:#fff;border-color:#0D47A1}
+
+/* ── OVERLAY ── */
+.overlay{
+  position:fixed;inset:0;background:rgba(20,30,50,.52);
+  z-index:999;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.overlay.open{opacity:1;pointer-events:all}
+
+/* ── MODAL FICHA ── */
+.modal{
+  background:var(--surface);border-radius:14px;
+  box-shadow:0 12px 48px rgba(20,30,50,.28);
+  width:min(680px,95vw);
+  max-height:92vh;
+  overflow:hidden;
+  display:flex;flex-direction:column;
+  transform:translateY(16px) scale(.98);transition:transform .2s;
+}
+.overlay.open .modal{transform:none}
+
+.modal-hdr{
+  background:var(--navy);padding:18px 22px 14px;flex-shrink:0;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+}
+.modal-hdr-info h2{color:#fff;font-size:1rem;font-weight:700;line-height:1.2}
+.modal-hdr-info p{color:rgba(255,255,255,.55);font-size:.73rem;margin-top:3px}
+.modal-close{
+  background:rgba(255,255,255,.12);border:none;color:#fff;
+  width:30px;height:30px;border-radius:8px;cursor:pointer;
+  font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:background .14s;
+}
+.modal-close:hover{background:rgba(255,255,255,.25)}
+
+.modal-body{overflow-y:auto;padding:18px 22px 20px;flex:1}
+
+/* ── FICHA SECCIONES ── */
+.ficha-sec{margin-bottom:18px}
+.ficha-sec-title{
+  font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--text3);border-bottom:1.5px solid var(--border);
+  padding-bottom:5px;margin-bottom:10px;
+}
+.ficha-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px}
+.ficha-field{display:flex;flex-direction:column;gap:2px}
+.ficha-field.full{grid-column:1/-1}
+.ficha-lbl{font-size:.65rem;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.ficha-val{font-size:.82rem;color:var(--text);font-weight:500}
+
+/* ── TABLA ETAPAS MODAL ── */
+.etapas-tbl{width:100%;border-collapse:collapse;font-size:.75rem;margin-top:4px;table-layout:fixed}
+.etapas-tbl th{
+  background:var(--navy);color:#fff;font-size:.65rem;font-weight:600;
+  letter-spacing:.04em;text-transform:uppercase;padding:7px 10px;text-align:left;
+}
+.etapas-tbl th:first-child{width:46%}
+.etapas-tbl th:nth-child(2){width:28%;text-align:center}
+.etapas-tbl th:nth-child(3){width:26%;text-align:center}
+.etapas-tbl th.tc{text-align:center}
+.etapas-tbl td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:middle;overflow:hidden;text-overflow:ellipsis}
+.etapas-tbl td.tc{text-align:center}
+.etapas-tbl tr:last-child td{border-bottom:none}
+.etapas-tbl tr:hover td{background:#F5F8FD}
+
+/* form badge */
+.bx-form-env{background:#E8EAF6;color:#3949AB}
+.bx-form-pen{background:#FFF3CD;color:#856404}
+.bx-form-na {background:#EFEFEF;color:#5A5A5A}
+
+/* ── BARRA AVANCE MODAL ── */
+.ficha-prog{display:flex;align-items:center;gap:10px;margin-top:6px}
+.ficha-pbar{flex:1;height:8px;background:var(--border);border-radius:5px;overflow:hidden}
+.ficha-pfill{height:100%;border-radius:5px}
+.ficha-pnum{font-family:'DM Mono',monospace;font-size:.75rem;color:var(--text2);white-space:nowrap}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:4px;margin-bottom:20px;border-bottom:2px solid var(--border);padding-bottom:0}
+.tab{
+  padding:9px 20px;border-radius:8px 8px 0 0;font-size:.8rem;font-weight:600;
+  cursor:pointer;color:var(--text2);background:none;border:none;
+  border-bottom:3px solid transparent;margin-bottom:-2px;
+  font-family:'Outfit',sans-serif;transition:all .15s;
+}
+.tab:hover{color:var(--navy);background:var(--bg)}
+.tab.active{color:var(--navy);border-bottom-color:var(--navy);background:var(--surface)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* ── STATS GRID ── */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px}
+.stats-grid.full{grid-template-columns:1fr}
+.stat-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);box-shadow:var(--sh);padding:18px 20px;
+}
+.stat-card-title{
+  font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--text3);margin-bottom:14px;
+}
+/* barras horizontales */
+.hbar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.hbar-label{font-size:.75rem;color:var(--text);font-weight:500;min-width:130px;text-align:right}
+.hbar-track{flex:1;height:18px;background:var(--bg);border-radius:4px;overflow:hidden;position:relative}
+.hbar-fill{height:100%;border-radius:4px;transition:width .5s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:6px}
+.hbar-fill span{font-size:.68rem;font-weight:700;color:#fff;white-space:nowrap}
+/* donut simple SVG */
+.donut-wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.donut-legend{display:flex;flex-direction:column;gap:7px;flex:1}
+.leg-item{display:flex;align-items:center;gap:8px;font-size:.75rem;color:var(--text)}
+.leg-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.leg-val{font-weight:700;color:var(--navy);margin-left:auto;font-family:'DM Mono',monospace}
+@media print{
+  @page{ margin:15mm; size:A4 portrait; }
+
+  /* ocultar todo menos el modal */
+  body > *:not(.overlay){ display:none !important; }
+  .hdr, .main{ display:none !important; }
+
+  /* mostrar overlay como bloque simple */
+  .overlay{
+    position:static !important;
+    background:none !important;
+    display:block !important;
+    opacity:1 !important;
+    pointer-events:none;
+  }
+  .modal{
+    box-shadow:none !important;
+    border-radius:0 !important;
+    max-height:none !important;
+    width:100% !important;
+    transform:none !important;
+    display:block !important;
+    overflow:visible !important;
+  }
+  .modal-hdr{
+    background:#2C4770 !important;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+  }
+  .modal-body{
+    overflow:visible !important;
+    padding:12px 16px !important;
+  }
+  /* ocultar botones de acción */
+  .modal-close, .btn-print-ficha{ display:none !important; }
+
+  /* mantener colores en impresión */
+  *{ -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+
+  /* tabla etapas sin hover */
+  .etapas-tbl tr:hover td{ background:inherit !important; }
+
+  /* secciones sin page-break en medio */
+  .ficha-sec{ page-break-inside:avoid; }
+}
+
+
+/* ── SINCRONIZACIÓN ONEDRIVE ── */
+.sync-bar{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 28px;font-size:.75rem;font-weight:500;
+  font-family:'Outfit',sans-serif;
+  border-bottom:1px solid var(--border);
+  background:var(--surface);
+}
+.sync-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;transition:background .3s}
+.sync-dot.ok{background:#4CAF50}
+.sync-dot.syncing{background:#FF9800;animation:pulse .8s infinite alternate}
+.sync-dot.error{background:#F44336}
+.sync-dot.offline{background:#9E9E9E}
+@keyframes pulse{from{opacity:.4}to{opacity:1}}
+.sync-msg{color:var(--text2)}
+.sync-msg strong{color:var(--text)}
+.sync-actions{margin-left:auto;display:flex;gap:8px}
+.btn-sync-login{
+  padding:5px 14px;border-radius:6px;border:1.5px solid var(--blue);
+  background:none;color:var(--blue);font-family:'Outfit',sans-serif;
+  font-size:.72rem;font-weight:600;cursor:pointer;transition:all .14s;
+}
+.btn-sync-login:hover{background:var(--blue);color:#fff}
+.btn-sync-manual{
+  padding:5px 12px;border-radius:6px;border:1.5px solid var(--border);
+  background:none;color:var(--text2);font-family:'Outfit',sans-serif;
+  font-size:.72rem;font-weight:600;cursor:pointer;transition:all .14s;
+}
+.btn-sync-manual:hover{border-color:var(--blue);color:var(--blue)}
+
+/* ── MODO EDICIÓN ── */
+.edit-toggle{
+  display:flex;align-items:center;gap:6px;
+  padding:7px 16px;border-radius:8px;
+  background:rgba(255,255,255,.12);color:#fff;
+  border:1.5px solid rgba(255,255,255,.25);
+  font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;
+  cursor:pointer;transition:all .15s;white-space:nowrap;
+}
+.edit-toggle:hover{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.5)}
+.edit-toggle.active{background:#E65100;border-color:#FF7043}
+.edit-badge{
+  display:inline-block;font-size:.62rem;font-weight:700;
+  background:#E65100;color:#fff;padding:1px 6px;border-radius:10px;margin-left:4px;
+}
+.sel-etapa{
+  appearance:none;-webkit-appearance:none;
+  border:1.5px solid transparent;border-radius:14px;
+  font-family:'Outfit',sans-serif;font-size:.68rem;font-weight:700;
+  padding:3px 22px 3px 8px;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 6px center;
+  transition:border-color .14s;min-width:110px;
+}
+.sel-etapa:focus{outline:none;border-color:#4A7CB5}
+.sel-etapa.s-real{background-color:var(--real-bg);color:var(--real-ft);border-color:var(--fin-bdr)}
+.sel-etapa.s-pend{background-color:var(--pend-bg);color:var(--pend-ft);border-color:#FFC107}
+.sel-etapa.s-enpr{background-color:var(--enpr-bg);color:var(--enpr-ft);border-color:#17A2B8}
+.sel-etapa.s-post{background-color:var(--post-bg);color:var(--post-ft);border-color:#EF5350}
+.sel-etapa.s-napl{background-color:var(--napl-bg);color:var(--napl-ft);border-color:#ccc}
+.sel-form{
+  appearance:none;-webkit-appearance:none;
+  border:1.5px solid transparent;border-radius:14px;
+  font-family:'Outfit',sans-serif;font-size:.65rem;font-weight:700;
+  padding:2px 20px 2px 7px;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23666'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 5px center;
+  transition:border-color .14s;min-width:100px;
+}
+.sel-form:focus{outline:none;border-color:#4A7CB5}
+.sel-form.sf-env{background-color:#E8EAF6;color:#3949AB;border-color:#9FA8DA}
+.sel-form.sf-pen{background-color:#FFF3CD;color:#856404;border-color:#FFC107}
+.sel-form.sf-na {background-color:#EFEFEF;color:#5A5A5A;border-color:#ccc}
+
+/* modo edición: highlight etapas editables */
+body.editing td.tc-etapa{background:rgba(74,124,181,.04)}
+body.editing .sel-etapa,body.editing .sel-form{box-shadow:0 0 0 2px rgba(74,124,181,.15)}
+
+/* notificación guardado */
+.toast{
+  position:fixed;bottom:24px;right:24px;z-index:9999;
+  background:#1B5E20;color:#fff;padding:10px 20px;border-radius:10px;
+  font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:600;
+  box-shadow:0 4px 16px rgba(0,0,0,.2);
+  opacity:0;transform:translateY(8px);transition:all .25s;pointer-events:none;
+}
+.toast.show{opacity:1;transform:none}
+
+/* ── BOTÓN IMPRIMIR FLOTANTE ── */
+.btn-print-ficha{
+  display:flex;align-items:center;gap:6px;
+  padding:8px 18px;border-radius:8px;
+  background:#2C4770;color:#fff;border:none;
+  font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:600;
+  cursor:pointer;transition:background .15s;margin-top:14px;
+  width:100%;justify-content:center;
+}
+.btn-print-ficha:hover{ background:#3d5a8a; }
+
+
+/* ── INPUTS TEXTO INLINE (modo edición) ── */
+.inp-inline{
+  border:1.5px solid var(--border);border-radius:8px;
+  font-family:'Outfit',sans-serif;font-size:.72rem;font-weight:500;
+  color:var(--text);background:var(--surface);
+  padding:4px 8px;width:100%;min-width:110px;max-width:160px;
+  transition:border-color .14s;
+}
+.inp-inline:focus{outline:none;border-color:var(--blue);background:#F0F6FF}
+.inp-inline::placeholder{color:var(--text3);font-style:italic}
+
+
+.btn-undo{
+  display:flex;align-items:center;gap:5px;
+  padding:7px 13px;border-radius:8px;
+  background:rgba(255,255,255,.12);color:#fff;
+  border:1.5px solid rgba(255,255,255,.25);
+  font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;
+  cursor:pointer;transition:all .15s;white-space:nowrap;opacity:.5;
+}
+.btn-undo:hover{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.5);opacity:1}
+.btn-undo:not([disabled]){opacity:1}
+.btn-undo[disabled]{cursor:not-allowed}
+
+/* menú de opciones avanzadas */
+.hdr-menu-wrap{position:relative}
+.btn-more{
+  width:34px;height:34px;border-radius:8px;
+  background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);
+  border:1.5px solid rgba(255,255,255,.2);
+  font-size:1rem;cursor:pointer;transition:all .15s;
+  display:flex;align-items:center;justify-content:center;
+}
+.btn-more:hover{background:rgba(255,255,255,.22);color:#fff;border-color:rgba(255,255,255,.5)}
+.hdr-dropdown{
+  position:absolute;top:calc(100% + 8px);right:0;
+  background:#fff;border:1px solid var(--border);border-radius:10px;
+  box-shadow:0 8px 28px rgba(20,30,50,.18);
+  min-width:200px;overflow:hidden;
+  opacity:0;pointer-events:none;transform:translateY(-6px);
+  transition:opacity .15s,transform .15s;z-index:500;
+}
+.hdr-dropdown.open{opacity:1;pointer-events:all;transform:none}
+.hdr-drop-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 16px;font-size:.78rem;font-weight:500;
+  color:var(--text);cursor:pointer;transition:background .1s;
+  font-family:'Outfit',sans-serif;background:none;border:none;width:100%;text-align:left;
+}
+.hdr-drop-item:hover{background:var(--bg)}
+.hdr-drop-item.danger{color:#B71C1C}
+.hdr-drop-item.danger:hover{background:#FFF5F5}
+.hdr-drop-sep{height:1px;background:var(--border);margin:4px 0}
+
+/* ── BOTÓN AGREGAR ── */
+.btn-add{
+  display:flex;align-items:center;gap:6px;
+  padding:7px 16px;border-radius:8px;
+  background:rgba(46,125,50,.85);color:#fff;
+  border:1.5px solid rgba(255,255,255,.3);
+  font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;
+  cursor:pointer;transition:all .15s;white-space:nowrap;
+}
+.btn-add:hover{background:rgba(46,125,50,1);border-color:rgba(255,255,255,.6)}
+
+/* ── MODAL AGREGAR TRABAJADOR ── */
+.add-overlay{
+  position:fixed;inset:0;background:rgba(20,30,50,.55);
+  z-index:1000;display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.add-overlay.open{opacity:1;pointer-events:all}
+.add-modal{
+  background:var(--surface);border-radius:14px;
+  box-shadow:0 12px 48px rgba(20,30,50,.28);
+  width:min(700px,96vw);max-height:94vh;
+  overflow:hidden;display:flex;flex-direction:column;
+  transform:translateY(16px) scale(.98);transition:transform .2s;
+}
+.add-overlay.open .add-modal{transform:none}
+.add-modal-hdr{
+  background:var(--navy);padding:16px 22px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.add-modal-hdr h2{color:#fff;font-size:.95rem;font-weight:700;margin:0}
+.add-modal-hdr p{color:rgba(255,255,255,.5);font-size:.72rem;margin:2px 0 0}
+.add-modal-body{overflow-y:auto;padding:20px 22px 16px;flex:1}
+
+/* form grid */
+.add-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;margin-bottom:14px}
+.add-field{display:flex;flex-direction:column;gap:4px}
+.add-field.full{grid-column:1/-1}
+.add-lbl{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text3)}
+.add-input, .add-select{
+  padding:7px 10px;border-radius:8px;font-size:.8rem;font-family:'Outfit',sans-serif;
+  border:1.5px solid var(--border);background:var(--surface);color:var(--text);
+  transition:border-color .14s;
+}
+.add-input:focus,.add-select:focus{outline:none;border-color:var(--blue)}
+.add-sec-title{
+  font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--text3);border-bottom:1.5px solid var(--border);
+  padding-bottom:5px;margin:16px 0 10px;
+}
+.add-footer{
+  display:flex;gap:10px;justify-content:flex-end;
+  padding:14px 22px;border-top:1px solid var(--border);flex-shrink:0;
+}
+.btn-cancel-add{
+  padding:8px 20px;border-radius:8px;border:1.5px solid var(--border);
+  background:none;font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:600;
+  color:var(--text2);cursor:pointer;transition:all .14s;
+}
+.btn-cancel-add:hover{border-color:#B71C1C;color:#B71C1C}
+.btn-confirm-add{
+  padding:8px 22px;border-radius:8px;border:none;
+  background:#2C4770;color:#fff;
+  font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:600;
+  cursor:pointer;transition:background .14s;
+}
+.btn-confirm-add:hover{background:#3d5a8a}
+.add-err{font-size:.72rem;color:#B71C1C;display:none;margin-top:4px}
+
+</style>
+</head>
+<body>
+
+<!-- MODAL AGREGAR TRABAJADOR -->
+<div class="add-overlay" id="add-overlay" onclick="closeAdd(event)">
+  <div class="add-modal" id="add-modal">
+    <div class="add-modal-hdr">
+      <div>
+        <h2>＋ Agregar trabajador/a</h2>
+        <p>Los datos se agregan directamente a la tabla</p>
+      </div>
+      <button class="modal-close" onclick="closeAdd(null)">✕</button>
+    </div>
+    <div class="add-modal-body">
+
+      <div class="add-sec-title">Datos del trabajador/a</div>
+      <div class="add-grid">
+        <div class="add-field"><span class="add-lbl">RUT *</span><input class="add-input" id="af-rut" placeholder="12.345.678-9"></div>
+        <div class="add-field"><span class="add-lbl">Nombre completo *</span><input class="add-input" id="af-nombre" placeholder="Nombre Apellido"></div>
+        <div class="add-field full"><span class="add-lbl">Cargo *</span><input class="add-input" id="af-cargo" placeholder="Ej: Analista de Personas"></div>
+        <div class="add-field full"><span class="add-lbl">Unidad organizativa</span><input class="add-input" id="af-unidad" placeholder="Ej: Dirección de Personas"></div>
+        <div class="add-field"><span class="add-lbl">Fecha de ingreso *</span><input class="add-input" id="af-fecha" placeholder="DD-MM-AAAA" type="date"></div>
+        <div class="add-field"><span class="add-lbl">Mes</span>
+          <select class="add-select" id="af-mes">
+            <option>Enero</option><option>Febrero</option><option>Marzo</option>
+            <option selected>Abril</option><option>Mayo</option><option>Junio</option>
+            <option>Julio</option><option>Agosto</option><option>Septiembre</option>
+            <option>Octubre</option><option>Noviembre</option><option>Diciembre</option>
+          </select>
+        </div>
+        <div class="add-field"><span class="add-lbl">Vínculo</span>
+          <select class="add-select" id="af-vinculo">
+            <option>Planta</option><option>Proyecto</option><option>Reemplazo</option><option>Especial</option><option>-</option>
+          </select>
+        </div>
+        <div class="add-field"><span class="add-lbl">Glosa</span>
+          <select class="add-select" id="af-glosa">
+            <option>Profesionales</option><option>Técnicos</option><option>Servicios</option>
+            <option>Directivos</option><option>Administrativos</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="add-sec-title">Gestión del proceso</div>
+      <div class="add-grid">
+        <div class="add-field"><span class="add-lbl">Tipo de proceso</span>
+          <select class="add-select" id="af-tipo">
+            <option>Contratación</option><option>Reingreso</option>
+          </select>
+        </div>
+        <div class="add-field"><span class="add-lbl">Grupo</span>
+          <select class="add-select" id="af-grp">
+            <option>G1</option><option>G2</option><option>G3</option><option selected>G4</option>
+          </select>
+        </div>
+        <div class="add-field"><span class="add-lbl">Psicólogo/a que derivó</span><input class="add-input" id="af-psi" placeholder="Ej: Omar Rojas"></div>
+        <div class="add-field"><span class="add-lbl">Prof. Desarrollo asignado</span>
+          <input class="add-input" id="af-prof" placeholder="Por asignar">
+        </div>
+      </div>
+
+      <div class="add-sec-title">Estado inicial de etapas</div>
+      <div class="add-grid">
+        <div class="add-field"><span class="add-lbl">Estado inducción</span>
+          <select class="add-select" id="af-est">
+            <option>Incompleta</option><option>En curso</option><option>Completa</option>
+          </select>
+        </div>
+        <div class="add-field"><span class="add-lbl">Charla</span>
+          <select class="add-select" id="af-charla">
+            <option>Pendiente</option><option>Realizada</option><option>En proceso</option><option>Postergada</option><option>No aplica</option>
+          </select>
+        </div>
+        <div class="add-field"><span class="add-lbl">Entrega Docs.</span>
+          <select class="add-select" id="af-docs">
+            <option>Pendiente</option><option>Realizada</option><option>En proceso</option><option>Postergada</option><option>No aplica</option>
+          </select>
+        </div>
+        <div class="add-field"><span class="add-lbl">Visita JI</span>
+          <select class="add-select" id="af-visita">
+            <option>Pendiente</option><option>Realizada</option><option>En proceso</option><option>Postergada</option><option>No aplica</option>
+          </select>
+        </div>
+        <div class="add-field"><span class="add-lbl">Entrevista</span>
+          <select class="add-select" id="af-entrev">
+            <option>Pendiente</option><option>Realizada</option><option>En proceso</option><option>Postergada</option><option>No aplica</option>
+          </select>
+        </div>
+        <div class="add-field"><span class="add-lbl">Retro 3m</span>
+          <select class="add-select" id="af-r3">
+            <option>Pendiente</option><option>Realizada</option><option>En proceso</option><option>Postergada</option><option>No aplica</option>
+          </select>
+        </div>
+        <div class="add-field"><span class="add-lbl">Retro 6m</span>
+          <select class="add-select" id="af-r6">
+            <option>Pendiente</option><option>Realizada</option><option>En proceso</option><option>Postergada</option><option>No aplica</option>
+          </select>
+        </div>
+        <div class="add-field full"><span class="add-lbl">Observación</span><input class="add-input" id="af-obs" placeholder="Opcional..."></div>
+      </div>
+
+      <div class="add-err" id="add-err">⚠ Por favor completa los campos obligatorios (*)</div>
+    </div>
+    <div class="add-footer">
+      <button class="btn-cancel-add" onclick="closeAdd(null)">Cancelar</button>
+      <button class="btn-confirm-add" onclick="confirmAdd()">＋ Agregar a la tabla</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL FICHA -->
+<div class="overlay" id="overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-hdr">
+      <div class="modal-hdr-info">
+        <h2 id="m-nombre">—</h2>
+        <p id="m-rut-cargo">—</p>
+      </div>
+      <button class="modal-close" onclick="closeModal(null)">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<header class="hdr">
+  <div class="hdr-l">
+    <div class="hdr-icon">🌱</div>
+    <div class="hdr-title">
+      <h1>Seguimiento de Inducciones — Casa Central</h1>
+      <p>Fundación Integra · Dirección de Personas · 2026</p>
+    </div>
+  </div>
+  <div class="hdr-date" id="hdr-date"></div>
+  <button class="edit-toggle" id="btn-edit" onclick="toggleEdit()">✏️ Modo edición</button>
+  <button class="btn-undo" id="btn-undo" onclick="undoLast()" disabled title="Deshacer último cambio">↩ Deshacer</button>
+  <div class="hdr-menu-wrap">
+    <button class="btn-more" id="btn-more" onclick="toggleMore()" title="Más opciones">⋯</button>
+    <div class="hdr-dropdown" id="hdr-dropdown">
+      <button class="hdr-drop-item" onclick="exportExcel()">📊 Exportar a Excel</button>
+      <button class="hdr-drop-item" onclick="exportHTML()">💾 Exportar HTML con datos</button>
+      <div class="hdr-drop-sep"></div>
+      <button class="hdr-drop-item danger" onclick="clearData()">🗑 Restablecer datos originales</button>
+    </div>
+  </div>
+  <button class="btn-add" onclick="openAdd()">＋ Agregar trabajador/a</button>
+</header>
+
+<!-- SYNC BAR -->
+<div class="sync-bar" id="sync-bar">
+  <span class="sync-dot offline" id="sync-dot"></span>
+  <span class="sync-msg" id="sync-msg"><strong>OneDrive:</strong> Iniciando sesión...</span>
+  <div class="sync-actions" id="sync-actions"></div>
+</div>
+
+<main class="main">
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('registro')">📋 Registro</button>
+  <button class="tab" onclick="switchTab('estadisticas')">📊 Estadísticas</button>
+</div>
+
+<!-- ══ PESTAÑA REGISTRO ══ -->
+<div class="tab-panel active" id="tab-registro">
+
+<!-- KPIs -->
+<div class="kpi-grid">
+  <div class="kpi total"><span class="kpi-icon">👥</span><div class="kpi-num" id="kn-total">—</div><div class="kpi-label">Total Personas</div><div class="kpi-sub">registradas</div></div>
+  <div class="kpi fin">  <span class="kpi-icon">✅</span><div class="kpi-num" id="kn-fin">—</div><div class="kpi-label">Inducciones Completas</div><div class="kpi-sub">todas las etapas ok</div></div>
+  <div class="kpi cur">  <span class="kpi-icon">⏳</span><div class="kpi-num" id="kn-cur">—</div><div class="kpi-label">En Curso</div><div class="kpi-sub">etapas pendientes activas</div></div>
+  <div class="kpi inc">  <span class="kpi-icon">⚠️</span><div class="kpi-num" id="kn-inc">—</div><div class="kpi-label">Incompletas</div><div class="kpi-sub">etapas postergadas</div></div>
+</div>
+
+<!-- SEGMENTADORES -->
+<div class="seg-panel">
+  <div class="seg-row">
+
+    <div class="seg-group">
+      <span class="seg-label">Estado Inducción</span>
+      <div class="chips" id="f-estado">
+        <span class="chip on" data-v="all">Todos</span>
+        <span class="chip c-fin" data-v="Completa">✅ Completa</span>
+        <span class="chip c-cur" data-v="En curso">⏳ En Curso</span>
+        <span class="chip c-inc" data-v="Incompleta">⚠️ Incompleta</span>
+      </div>
+    </div>
+
+    <div class="seg-divider"></div>
+
+    <div class="seg-group">
+      <span class="seg-label">Prof. Desarrollo Asignado</span>
+      <div class="chips" id="f-prof">
+        <span class="chip on" data-v="all">Todos</span>
+        <span class="chip c-prof" data-v="Por asignar">Por asignar</span>
+      </div>
+    </div>
+
+    <div class="seg-divider"></div>
+
+    <div class="seg-group">
+      <span class="seg-label">Tipo Proceso</span>
+      <div class="chips" id="f-tipo">
+        <span class="chip on" data-v="all">Todos</span>
+        <span class="chip c-tipo" data-v="Contratación">Contratación</span>
+        <span class="chip c-tipo" data-v="Reingreso">Reingreso</span>
+      </div>
+    </div>
+
+    <div class="seg-divider"></div>
+
+    <div class="seg-group">
+      <span class="seg-label">Mes de Ingreso</span>
+      <div class="chips" id="f-mes">
+        <span class="chip on" data-v="all">Todos</span>
+        <span class="chip c-mes" data-v="Abril">Abril</span>
+      </div>
+    </div>
+
+    <button class="btn-reset" onclick="reset()">↺ Limpiar</button>
+  </div>
+
+  <!-- fila 2 segmentadores -->
+  <div class="seg-row" style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+    <div class="seg-group">
+      <span class="seg-label">Grupo</span>
+      <div class="chips" id="f-grp">
+        <span class="chip on" data-v="all">Todos</span>
+        <span class="chip c-grp4" data-v="G4">G4</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTADO -->
+<div class="rbar">
+  <div class="rcount">Mostrando <strong id="cnt-vis">—</strong> de <strong id="cnt-tot">—</strong> personas</div>
+</div>
+
+<!-- TABLA -->
+<div class="tbl-outer">
+  <div class="tbl-scroll-top" id="scroll-top">
+    <div class="tbl-scroll-top-inner" id="scroll-top-inner"></div>
+  </div>
+  <div class="tbl-wrap" id="tbl-wrap">
+  <table id="tbl">
+    <thead>
+      <tr>
+        <th>RUT</th>
+        <th>Nombre / Cargo</th>
+        <th>Fecha Ing.</th>
+        <th>Mes</th>
+        <th>Grupo</th>
+        <th>Tipo</th>
+        <th>Psicólogo/a Derivó</th>
+        <th>Prof. Asignado</th>
+        <th>Estado</th>
+        <th class="th-etapa">Charla</th>
+        <th class="th-etapa">Docs.</th>
+        <th class="th-etapa">Visita JI</th>
+        <th class="th-etapa" style="background:#263238">Form Entrevista</th>
+        <th class="th-etapa">Entrevista</th>
+        <th class="th-etapa" style="background:#263238">Form Retro 3m</th>
+        <th class="th-etapa">Retro 3m</th>
+        <th class="th-etapa" style="background:#263238">Form Retro 6m</th>
+        <th class="th-etapa">Retro 6m</th>
+        <th class="th-etapa">Docs.</th>
+        <th>Avance</th>
+        <th>G. Recup.</th>
+        <th>Observación</th>
+        <th>Ficha</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+  <div class="empty" id="empty" style="display:none">
+    <div class="ei">🔍</div>
+    <p>Sin resultados con los filtros seleccionados.</p>
+  </div>
+  </div>
+</div>
+
+</div><!-- /tab-registro -->
+
+<!-- ══ PESTAÑA ESTADÍSTICAS ══ -->
+<div class="tab-panel" id="tab-estadisticas">
+
+  <!-- Segmentadores estadísticas (mismos del registro) -->
+  <div class="seg-panel" style="margin-bottom:18px">
+    <div class="seg-row">
+      <div class="seg-group">
+        <span class="seg-label">Estado Inducción</span>
+        <div class="chips" id="sf-estado">
+          <span class="chip on" data-v="all">Todos</span>
+          <span class="chip c-fin" data-v="Completa">✅ Completa</span>
+          <span class="chip c-cur" data-v="En curso">⏳ En Curso</span>
+          <span class="chip c-inc" data-v="Incompleta">⚠️ Incompleta</span>
+        </div>
+      </div>
+      <div class="seg-divider"></div>
+      <div class="seg-group">
+        <span class="seg-label">Prof. Desarrollo Asignado</span>
+        <div class="chips" id="sf-prof">
+          <span class="chip on" data-v="all">Todos</span>
+          <span class="chip c-prof" data-v="Por asignar">Por asignar</span>
+        </div>
+      </div>
+      <div class="seg-divider"></div>
+      <div class="seg-group">
+        <span class="seg-label">Tipo Proceso</span>
+        <div class="chips" id="sf-tipo">
+          <span class="chip on" data-v="all">Todos</span>
+          <span class="chip c-tipo" data-v="Contratación">Contratación</span>
+          <span class="chip c-tipo" data-v="Reingreso">Reingreso</span>
+        </div>
+      </div>
+      <div class="seg-divider"></div>
+      <div class="seg-group">
+        <span class="seg-label">Mes de Ingreso</span>
+        <div class="chips" id="sf-mes">
+          <span class="chip on" data-v="all">Todos</span>
+          <span class="chip c-mes" data-v="Abril">Abril</span>
+        </div>
+      </div>
+      <button class="btn-reset" onclick="resetStats()">↺ Limpiar</button>
+    </div>
+    <div class="seg-row" style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border)">
+      <div class="seg-group">
+        <span class="seg-label">Grupo</span>
+        <div class="chips" id="sf-grp">
+          <span class="chip on" data-v="all">Todos</span>
+          <span class="chip c-grp4" data-v="G4">G4</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPIs filtrados -->
+  <div class="kpi-grid" style="margin-bottom:20px">
+    <div class="kpi total"><span class="kpi-icon">👥</span><div class="kpi-num" id="st-total">—</div><div class="kpi-label">Total Personas</div><div class="kpi-sub">registradas</div></div>
+    <div class="kpi fin">  <span class="kpi-icon">✅</span><div class="kpi-num" id="st-fin">—</div><div class="kpi-label">Inducciones Completas</div><div class="kpi-sub">todas las etapas ok</div></div>
+    <div class="kpi cur">  <span class="kpi-icon">⏳</span><div class="kpi-num" id="st-cur">—</div><div class="kpi-label">En Curso</div><div class="kpi-sub">etapas pendientes activas</div></div>
+    <div class="kpi inc">  <span class="kpi-icon">⚠️</span><div class="kpi-num" id="st-inc">—</div><div class="kpi-label">Incompletas</div><div class="kpi-sub">etapas postergadas</div></div>
+  </div>
+
+  <!-- Fila 1: Estado + Categoría cargo -->
+  <div class="stats-grid">
+
+    <div class="stat-card">
+      <div class="stat-card-title">Estado del Proceso de Inducción</div>
+      <div class="donut-wrap">
+        <svg id="donut-estado" width="110" height="110" viewBox="0 0 110 110"></svg>
+        <div class="donut-legend" id="legend-estado"></div>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-card-title">Ingresos por Categoría de Cargo</div>
+      <div id="bars-glosa"></div>
+    </div>
+
+  </div>
+
+  <!-- Fila 2: Avance por etapa -->
+  <div class="stats-grid full">
+    <div class="stat-card">
+      <div class="stat-card-title">Avance por Etapa de Inducción — Realizadas vs Pendientes</div>
+      <div id="bars-etapas"></div>
+    </div>
+  </div>
+
+  <!-- Fila 3: Ingresos por mes + Tipo proceso -->
+  <div class="stats-grid">
+
+    <div class="stat-card">
+      <div class="stat-card-title">Ingresos por Mes</div>
+      <div id="bars-mes"></div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-card-title">Tipo de Proceso</div>
+      <div class="donut-wrap">
+        <svg id="donut-tipo" width="110" height="110" viewBox="0 0 110 110"></svg>
+        <div class="donut-legend" id="legend-tipo"></div>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /tab-estadisticas -->
+
+</main>
+
+<script>
+let D = [
+  {rut:"17.248.817-K",nombre:"César Antonio Díaz Torres",         cargo:"Auxiliar de Servicios Casa Central",   vinculo:"Planta",glosa:"Servicios",    unidad:"Sección Servicios Generales",                            fecha:"02-03-2026",mes:"Abril",grp:"G4",tipo:"Reingreso",    psi:"Omar Rojas",prof:"Por asignar",est:"Incompleta",charla:"Pendiente",visita:"Pendiente",form_entrev:"Pendiente",entrev:"Pendiente",form_r3:"Pendiente",r3:"Pendiente",form_r6:"Pendiente",r6:"Pendiente",docs:"Pendiente",grec:"",obs:""},
+  {rut:"20.054.487-0",nombre:"Valentina Isabella Miñones Cuello", cargo:"Profesional Apoyo",                    vinculo:"Planta",glosa:"Profesionales", unidad:"Área Comunicaciones Internas",                           fecha:"23-03-2026",mes:"Abril",grp:"G4",tipo:"Contratación", psi:"Omar Rojas",prof:"Por asignar",est:"Incompleta",charla:"Pendiente",visita:"Pendiente",form_entrev:"Pendiente",entrev:"Pendiente",form_r3:"Pendiente",r3:"Pendiente",form_r6:"Pendiente",r6:"Pendiente",docs:"Pendiente",grec:"",obs:""},
+  {rut:"20.133.708-9",nombre:"Valentina Javiera Osorio Silva",    cargo:"Analista de Abastecimiento",          vinculo:"Planta",glosa:"Técnicos",       unidad:"Departamento de Abastecimiento",                         fecha:"02-03-2026",mes:"Abril",grp:"G4",tipo:"Contratación", psi:"Omar Rojas",prof:"Por asignar",est:"Incompleta",charla:"Pendiente",visita:"Pendiente",form_entrev:"Pendiente",entrev:"Pendiente",form_r3:"Pendiente",r3:"Pendiente",form_r6:"Pendiente",r6:"Pendiente",docs:"Pendiente",grec:"",obs:""},
+  {rut:"24.976.821-9",nombre:"Miguel Alfonso Meneses Murcia",     cargo:"Auxiliar de Servicios Casa Central",   vinculo:"Planta",glosa:"Servicios",    unidad:"Sección Servicios Generales",                            fecha:"02-03-2026",mes:"Abril",grp:"G4",tipo:"Reingreso",    psi:"Omar Rojas",prof:"Por asignar",est:"Incompleta",charla:"Pendiente",visita:"Pendiente",form_entrev:"Pendiente",entrev:"Pendiente",form_r3:"Pendiente",r3:"Pendiente",form_r6:"Pendiente",r6:"Pendiente",docs:"Pendiente",grec:"",obs:""},
+  {rut:"15.775.307-K",nombre:"Mitzy Paula Canales Alarcón",       cargo:"Secretaria/o",                        vinculo:"Planta",glosa:"Técnicos",       unidad:"Planificación y Gestión Regional",                        fecha:"15-04-2026",mes:"Abril",grp:"G4",tipo:"Contratación", psi:"Omar Rojas",prof:"Por asignar",est:"Incompleta",charla:"Pendiente",visita:"Pendiente",form_entrev:"Pendiente",entrev:"Pendiente",form_r3:"Pendiente",r3:"Pendiente",form_r6:"Pendiente",r6:"Pendiente",docs:"Pendiente",grec:"",obs:""},
+  {rut:"Por ingresar",nombre:"Felipe Torrealba Ibáñez",           cargo:"Director Nacional",                   vinculo:"-",     glosa:"Directivos",     unidad:"Dirección Nacional de Jurídica",                         fecha:"15-04-2026",mes:"Abril",grp:"G4",tipo:"Contratación", psi:"-",         prof:"Por asignar",est:"Incompleta",charla:"Pendiente",visita:"Pendiente",form_entrev:"Pendiente",entrev:"Pendiente",form_r3:"Pendiente",r3:"Pendiente",form_r6:"Pendiente",r6:"Pendiente",docs:"Pendiente",grec:"",obs:"RUT pendiente de ingreso"},
+  {rut:"Por ingresar",nombre:"Edgardo Zúñiga Ruz",                cargo:"Director Nacional",                   vinculo:"-",     glosa:"Directivos",     unidad:"Dirección Nacional de Administración, Finanzas y Tecnología",fecha:"15-04-2026",mes:"Abril",grp:"G4",tipo:"Contratación", psi:"-",         prof:"Por asignar",est:"Incompleta",charla:"Pendiente",visita:"Pendiente",form_entrev:"Pendiente",entrev:"Pendiente",form_r3:"Pendiente",r3:"Pendiente",form_r6:"Pendiente",r6:"Pendiente",docs:"Pendiente",grec:"",obs:"RUT pendiente de ingreso"},
+];
+
+
+// ── CONFIGURACIÓN MICROSOFT GRAPH ──
+const GRAPH_CONFIG = {
+  clientId:   'de8bc8b5-d9f9-48b1-a8ad-b748da725064', // Graph Explorer app (público)
+  tenantId:   '9b3af417-dda1-4ba2-82e5-a79ef4f52305', // Fundación Integra
+  driveUser:  'liderazgoyformacion@integra.cl',
+  fileName:   'Proceso_induccion.xlsx',
+  sheetName:  'Registro',
+  scopes:     ['Files.ReadWrite', 'User.Read'],
+};
+
+// Token en memoria (se renueva con MSAL)
+let GRAPH_TOKEN = null;
+let SYNC_ENABLED = false;
+
+// ── MSAL (Microsoft Auth Library) ──
+const msalConfig = {
+  auth: {
+    clientId: GRAPH_CONFIG.clientId,
+    authority: 'https://login.microsoftonline.com/' + GRAPH_CONFIG.tenantId,
+    redirectUri: window.location.href.split('?')[0].split('#')[0],
+  },
+  cache: { cacheLocation: 'localStorage', storeAuthStateInCookie: true }
+};
+
+let msalInstance = null;
+
+async function initMSAL(){
+  try {
+    // Cargar MSAL dinámicamente
+    if(!window.msal){
+      await loadScript('https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js');
+    }
+    msalInstance = new msal.PublicClientApplication(msalConfig);
+    await msalInstance.initialize();
+
+    // Manejar redirect de vuelta
+    const resp = await msalInstance.handleRedirectPromise();
+    if(resp && resp.accessToken){
+      GRAPH_TOKEN = resp.accessToken;
+      SYNC_ENABLED = true;
+      setSyncStatus('ok', '✅ Conectado — cargando datos desde OneDrive...');
+      await loadFromExcel();
+      return;
+    }
+
+    // Intentar login silencioso
+    const accounts = msalInstance.getAllAccounts();
+    if(accounts.length > 0){
+      try {
+        const silent = await msalInstance.acquireTokenSilent({
+          scopes: GRAPH_CONFIG.scopes,
+          account: accounts[0]
+        });
+        GRAPH_TOKEN = silent.accessToken;
+        SYNC_ENABLED = true;
+        setSyncStatus('ok', '✅ Conectado — cargando datos desde OneDrive...');
+        await loadFromExcel();
+        return;
+      } catch(e){
+        // Token expirado, pedir nuevo via redirect
+        try {
+          await msalInstance.acquireTokenRedirect({
+            scopes: GRAPH_CONFIG.scopes,
+            account: accounts[0]
+          });
+        } catch(e2){}
+      }
+    }
+    setSyncStatus('offline', 'No conectado a OneDrive', true);
+  } catch(e){
+    setSyncStatus('offline', 'No conectado a OneDrive', true);
+  }
+}
+
+function loadScript(src){
+  return new Promise((res,rej)=>{
+    const s = document.createElement('script');
+    s.src = src; s.onload = res; s.onerror = rej;
+    document.head.appendChild(s);
+  });
+}
+
+async function loginOneDrive(){
+  if(!msalInstance) return;
+  setSyncStatus('syncing', 'Redirigiendo a Microsoft...');
+  try {
+    // Guardar URL actual para volver después del login
+    localStorage.setItem('integra_redirect_back', window.location.href);
+    await msalInstance.loginRedirect({ scopes: GRAPH_CONFIG.scopes });
+  } catch(e){
+    setSyncStatus('error', 'Error: ' + e.message, true);
+  }
+}
+
+function setSyncStatus(state, msg, showLogin=false){
+  const dot = document.getElementById('sync-dot');
+  const msgEl = document.getElementById('sync-msg');
+  const acts = document.getElementById('sync-actions');
+  dot.className = 'sync-dot ' + state;
+  msgEl.innerHTML = '<strong>OneDrive:</strong> ' + msg;
+  acts.innerHTML = showLogin
+    ? '<button class="btn-sync-login" onclick="loginOneDrive()">🔑 Iniciar sesión</button>'
+    : (state==='ok' ? '<button class="btn-sync-manual" onclick="syncNow()">↺ Sincronizar</button>' : '');
+}
+
+// ── LEER DESDE EXCEL ──
+async function loadFromExcel(){
+  if(!GRAPH_TOKEN) return false;
+  try {
+    setSyncStatus('syncing', 'Leyendo datos desde OneDrive...');
+    // Buscar el archivo
+    const searchResp = await graphFetch(
+      `https://graph.microsoft.com/v1.0/me/drive/root/search(q='${GRAPH_CONFIG.fileName}')?$select=id,name,webUrl`
+    );
+    const items = searchResp.value || [];
+    const file = items.find(i => i.name === GRAPH_CONFIG.fileName);
+    if(!file){ setSyncStatus('error','No se encontró el archivo '+GRAPH_CONFIG.fileName+' en OneDrive', true); return false; }
+
+    window._EXCEL_FILE_ID = file.id;
+
+    // Leer filas de la hoja Registro
+    const rangeResp = await graphFetch(
+      `https://graph.microsoft.com/v1.0/me/drive/items/${file.id}/workbook/worksheets('${GRAPH_CONFIG.sheetName}')/usedRange?$select=values`
+    );
+    const rows = rangeResp.values || [];
+    if(rows.length < 2){ setSyncStatus('ok','✅ Conectado — sin datos en la hoja Registro'); return true; }
+
+    const headers = rows[0];
+    const parsed = rows.slice(1).filter(r => r[0]).map(r => {
+      const o = {};
+      headers.forEach((h,i) => o[h] = r[i] || '');
+      return {
+        rut: o['RUT']||'', nombre: o['Nombre']||'', cargo: o['Cargo']||'',
+        vinculo: o['Vínculo']||'', glosa: o['Glosa']||'', unidad: o['Unidad']||'',
+        fecha: o['Fecha Ingreso']||'', mes: o['Mes']||'', grp: o['Grupo']||'',
+        tipo: o['Tipo Proceso']||'', psi: o['Psicólogo/a Derivó']||'',
+        prof: o['Prof. Desarrollo Asignado']||'', est: o['Estado Inducción']||'Incompleta',
+        charla: o['Charla']||'Pendiente', docs: o['Entrega Docs.']||'Pendiente',
+        visita: o['Visita JI']||'Pendiente', form_entrev: o['Form Entrevista']||'Pendiente',
+        entrev: o['Entrevista']||'Pendiente', form_r3: o['Form Retro 3m']||'Pendiente',
+        r3: o['Retro 3m']||'Pendiente', form_r6: o['Form Retro 6m']||'Pendiente',
+        r6: o['Retro 6m']||'Pendiente', grec: o['Grupo Recuperación']||'',
+        obs: o['Observación']||''
+      };
+    });
+    if(parsed.length > 0){
+      D = parsed;
+      document.getElementById('tbody').innerHTML='';
+      render(); apply(); refreshUndoBtn();
+    }
+    setSyncStatus('ok', '✅ Conectado a OneDrive — ' + parsed.length + ' personas cargadas');
+    return true;
+  } catch(e){
+    setSyncStatus('error', 'Error al leer Excel: ' + e.message, true);
+    return false;
+  }
+}
+
+// ── ESCRIBIR AL EXCEL ──
+async function saveToExcel(){
+  if(!GRAPH_TOKEN || !window._EXCEL_FILE_ID) return;
+  setSyncStatus('syncing', 'Guardando en OneDrive...');
+  try {
+    const headers = [
+      'RUT','Nombre','Cargo','Unidad','Vínculo','Glosa','Fecha Ingreso','Mes','Grupo',
+      'Tipo Proceso','Psicólogo/a Derivó','Prof. Desarrollo Asignado','Estado Inducción',
+      'Charla','Entrega Docs.','Visita JI','Form Entrevista','Entrevista',
+      'Form Retro 3m','Retro 3m','Form Retro 6m','Retro 6m','Grupo Recuperación','Observación'
+    ];
+    const rows = D.map(p => [
+      p.rut, p.nombre, p.cargo, p.unidad, p.vinculo, p.glosa,
+      p.fecha, p.mes, p.grp, p.tipo, p.psi, p.prof, p.est,
+      p.charla, p.docs, p.visita, p.form_entrev, p.entrev,
+      p.form_r3, p.r3, p.form_r6, p.r6, p.grec||'', p.obs||''
+    ]);
+    const values = [headers, ...rows];
+
+    // Limpiar hoja primero
+    await graphFetch(
+      `https://graph.microsoft.com/v1.0/me/drive/items/${window._EXCEL_FILE_ID}/workbook/worksheets('${GRAPH_CONFIG.sheetName}')/range(address='A1:X${values.length}')`,
+      'PATCH',
+      { values }
+    );
+    setSyncStatus('ok', '✅ Guardado en OneDrive · ' + new Date().toLocaleTimeString('es-CL'));
+  } catch(e){
+    setSyncStatus('error', 'Error al guardar: ' + e.message, true);
+  }
+}
+
+async function syncNow(){
+  await loadFromExcel();
+}
+
+async function graphFetch(url, method='GET', body=null){
+  const opts = {
+    method,
+    headers: {
+      'Authorization': 'Bearer ' + GRAPH_TOKEN,
+      'Content-Type': 'application/json'
+    }
+  };
+  if(body) opts.body = JSON.stringify(body);
+  const r = await fetch(url, opts);
+  if(!r.ok){
+    const err = await r.json().catch(()=>({}));
+    throw new Error(err.error?.message || r.statusText);
+  }
+  return method==='GET' || method==='PATCH' ? r.json() : {};
+}
+
+// ── PERSISTENCIA localStorage + HISTORIAL UNDO ──
+const LS_KEY      = 'integra_inducciones_v1';
+const LS_HIST_KEY = 'integra_inducciones_hist';
+const MAX_HIST    = 20;
+
+let HISTORY = []; // stack de snapshots anteriores
+
+function snapshot(){
+  // Guarda copia profunda del estado actual ANTES de un cambio
+  HISTORY.push(JSON.stringify(D));
+  if(HISTORY.length > MAX_HIST) HISTORY.shift();
+  try{ localStorage.setItem(LS_HIST_KEY, JSON.stringify(HISTORY)); } catch(e){}
+  refreshUndoBtn();
+}
+
+function refreshUndoBtn(){
+  const btn = document.getElementById('btn-undo');
+  if(!btn) return;
+  if(HISTORY.length > 0){
+    btn.removeAttribute('disabled');
+    btn.title = 'Deshacer último cambio (' + HISTORY.length + ' disponibles)';
+  } else {
+    btn.setAttribute('disabled','');
+    btn.title = 'Sin cambios para deshacer';
+  }
+}
+
+function undoLast(){
+  if(HISTORY.length === 0) return;
+  D = JSON.parse(HISTORY.pop());
+  try{ localStorage.setItem(LS_HIST_KEY, JSON.stringify(HISTORY)); } catch(e){}
+  saveData();
+  refreshUndoBtn();
+  document.getElementById('tbody').innerHTML='';
+  render(); apply();
+  showToast('↩ Cambio deshecho');
+}
+
+function saveData(){
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(D)); } catch(e){}
+  // Si hay conexión OneDrive, guardar también en Excel (debounced)
+  if(SYNC_ENABLED){
+    clearTimeout(window._saveTimer);
+    window._saveTimer = setTimeout(saveToExcel, 1500);
+  }
+}
+
+function loadData(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(raw){
+      const saved = JSON.parse(raw);
+      if(Array.isArray(saved) && saved.length > 0 && saved[0].rut !== undefined){
+        D = saved;
+      }
+    }
+    const rawH = localStorage.getItem(LS_HIST_KEY);
+    if(rawH) HISTORY = JSON.parse(rawH);
+  } catch(e){}
+}
+
+function clearData(){
+  if(confirm('¿Restablecer todos los datos al estado original?\nEsta acción eliminará todos los cambios realizados.')){
+    localStorage.removeItem(LS_KEY);
+    localStorage.removeItem(LS_HIST_KEY);
+    SYNC_ENABLED = false; GRAPH_TOKEN = null;
+    location.reload();
+  }
+}
+
+
+function exportExcel(){
+  toggleMore();
+
+  // Cabeceras
+  const headers = [
+    'RUT','Nombre','Cargo','Unidad','Vínculo','Glosa','Fecha Ingreso','Mes','Grupo',
+    'Tipo Proceso','Psicólogo/a Derivó','Prof. Desarrollo Asignado','Estado Inducción',
+    'Charla','Entrega Docs.','Visita JI',
+    'Form Entrevista','Entrevista',
+    'Form Retro 3m','Retro 3m',
+    'Form Retro 6m','Retro 6m',
+    'Avance (completadas/6)','Grupo Recuperación','Observación'
+  ];
+
+  // Filas
+  const rows = D.map(p => {
+    const av = [p.charla,p.visita,p.entrev,p.r3,p.r6,p.docs]
+               .filter(e=>e==='Realizada'||e==='No aplica').length;
+    return [
+      p.rut, p.nombre, p.cargo, p.unidad, p.vinculo, p.glosa,
+      p.fecha, p.mes, p.grp, p.tipo, p.psi, p.prof, p.est,
+      p.charla, p.docs, p.visita,
+      p.form_entrev, p.entrev,
+      p.form_r3, p.r3,
+      p.form_r6, p.r6,
+      av + '/6', p.grec||'', p.obs||''
+    ];
+  });
+
+  // Construir CSV con BOM (para que Excel abra con tildes correctas)
+  const BOM = '\uFEFF';
+  const escape = v => {
+    const s = String(v==null?'':v);
+    return s.includes(',') || s.includes('"') || s.includes('\n')
+      ? '"' + s.replace(/"/g,'""') + '"'
+      : s;
+  };
+  const csv = BOM + [headers, ...rows].map(r => r.map(escape).join(',')).join('\n');
+
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  const fecha = new Date().toISOString().slice(0,10);
+  a.download = 'inducciones_' + fecha + '.csv';
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+  showToast('📊 Excel exportado correctamente');
+}
+
+function exportHTML(){
+  toggleMore();
+  // Genera un nuevo HTML con D actualizado incrustado
+  const blob = new Blob([document.documentElement.outerHTML.replace(
+    /let D = \[.*?\];/s,
+    'let D = ' + JSON.stringify(D, null, 2) + ';'
+  )], {type:'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  const fecha = new Date().toISOString().slice(0,10);
+  a.download = 'dashboard_induccion_' + fecha + '.html';
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+  showToast('💾 HTML exportado con los datos actualizados');
+}
+
+function toggleMore(){
+  document.getElementById('hdr-dropdown').classList.toggle('open');
+}
+// Cerrar menú al hacer click fuera
+document.addEventListener('click', e=>{
+  const wrap = document.getElementById('btn-more');
+  const drop = document.getElementById('hdr-dropdown');
+  if(wrap && drop && !wrap.contains(e.target) && !drop.contains(e.target)){
+    drop.classList.remove('open');
+  }
+});
+
+const EC={Realizada:"real",Pendiente:"pend","En proceso":"enpr",Postergada:"post","No aplica":"napl"};
+const EI={Realizada:"✓",Pendiente:"·","En proceso":"◑",Postergada:"!","No aplica":"—"};
+const GC={"G1":"g1","G2":"g2","G3":"g3","G4":"g4"};
+const FC={Enviado:"form-env",Pendiente:"form-pen","No aplica":"form-na"};
+const FI={Enviado:"✉ Enviado",Pendiente:"· Pendiente","No aplica":"— No aplica"};
+
+function bEtapa(v){const c=EC[v]||"napl";return`<span class="bx bx-${c}">${EI[v]||"—"} ${v}</span>`}
+function bForm(v){const c=FC[v]||"form-na";return`<span class="bx bx-${c}" style="font-size:.65rem">${FI[v]||"—"}</span>`}
+function bEst(e){
+  const m={Completa:"fin","En curso":"cur",Incompleta:"inc"};
+  const i={Completa:"✅","En curso":"⏳",Incompleta:"⚠️"};
+  return`<span class="bx bx-${m[e]}">${i[e]} ${e}</span>`;
+}
+function bGrp(g){if(!g)return'<span style="color:#ccc">—</span>';
+  const c=GC[g]||"g1";return`<span class="bx bx-${c}">${g}</span>`;}
+function bTipo(t){return`<span class="bx bx-${t==="Externo"?"ext":"int"}">${t}</span>`}
+function bProf(p,i){
+  if(EDITING && i!==undefined){
+    return `<input class="inp-inline" style="border-color:#C5B3E6" value="${p||''}" placeholder="Por asignar"
+      onchange="updateTextField(${i},'prof',this.value)"
+      oninput="updateTextField(${i},'prof',this.value)">`;
+  }
+  return`<span class="bx bx-prof" style="font-size:.68rem">${p||'—'}</span>`;
+}
+function bPsi(p,i){
+  if(EDITING && i!==undefined){
+    return `<input class="inp-inline" value="${p||''}" placeholder="Nombre profesional"
+      onchange="updateTextField(${i},'psi',this.value)"
+      oninput="updateTextField(${i},'psi',this.value)">`;
+  }
+  return`<span style="font-size:.72rem;color:var(--text2);font-weight:500">${p||'—'}</span>`;
+}
+function avance(p){
+  return [p.charla,p.visita,p.entrev,p.r3,p.r6,p.docs]
+         .filter(e=>e==="Realizada"||e==="No aplica").length;
+}
+function progBar(n,tot=6){
+  const pct=Math.round(n/tot*100);
+  const col=pct>=80?"#2E7D32":pct>=50?"#E65100":"#B71C1C";
+  return`<div class="prog"><div class="pbar"><div class="pfill" style="width:${pct}%;background:${col}"></div></div><span class="pnum">${n}/${tot}</span></div>`;
+}
+
+// ── MODAL FICHA ──
+function openFicha(i){
+  const p=D[i];
+  document.getElementById("m-nombre").textContent=p.nombre;
+  document.getElementById("m-rut-cargo").textContent=`${p.rut}  ·  ${p.cargo}`;
+
+  const av=avance(p);
+  const pct=Math.round(av/6*100);
+  const col=pct>=80?"#2E7D32":pct>=50?"#E65100":"#B71C1C";
+
+  const estMap={Completa:"bx-fin","En curso":"bx-cur",Incompleta:"bx-inc"};
+  const estIcon={Completa:"✅","En curso":"⏳",Incompleta:"⚠️"};
+
+  const etapas=[
+    {label:"Charla de Inducción",            etapa:p.charla, form:null},
+    {label:"Entrega Docs. Institucionales",  etapa:p.docs,   form:null},
+    {label:"Visita a Jardín Infantil",       etapa:p.visita, form:null},
+    {label:"Entrevista Inicial",             etapa:p.entrev, form:p.form_entrev},
+    {label:"Retroalim. 3 Meses",             etapa:p.r3,     form:p.form_r3},
+    {label:"Retroalim. 6 Meses",             etapa:p.r6,     form:p.form_r6},
+  ];
+
+  document.getElementById("modal-body").innerHTML=`
+
+    <div class="ficha-sec">
+      <div class="ficha-sec-title">Datos del trabajador/a</div>
+      <div class="ficha-grid">
+        <div class="ficha-field"><span class="ficha-lbl">Unidad organizativa</span><span class="ficha-val">${p.unidad}</span></div>
+        <div class="ficha-field"><span class="ficha-lbl">Fecha de ingreso</span><span class="ficha-val">${p.fecha}</span></div>
+        <div class="ficha-field"><span class="ficha-lbl">Mes</span><span class="ficha-val">${p.mes}</span></div>
+        <div class="ficha-field"><span class="ficha-lbl">Grupo</span><span class="ficha-val">${bGrp(p.grp)}</span></div>
+        <div class="ficha-field"><span class="ficha-lbl">Tipo de proceso</span><span class="ficha-val">${bTipo(p.tipo)}</span></div>
+        <div class="ficha-field"><span class="ficha-lbl">Establecimiento</span><span class="ficha-val">${p.tipo==="Interno"?"Interno (movilidad)":"Casa Central"}</span></div>
+      </div>
+    </div>
+
+    <div class="ficha-sec">
+      <div class="ficha-sec-title">Gestión del proceso</div>
+      <div class="ficha-grid">
+        <div class="ficha-field"><span class="ficha-lbl">Psicólogo/a que derivó</span><span class="ficha-val">${bPsi(p.psi)}</span></div>
+        <div class="ficha-field"><span class="ficha-lbl">Prof. Desarrollo asignado</span><span class="ficha-val">${bProf(p.prof)}</span></div>
+      </div>
+    </div>
+
+    <div class="ficha-sec">
+      <div class="ficha-sec-title">Estado del proceso</div>
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px">
+        <span class="bx ${estMap[p.est]}" style="font-size:.8rem;padding:5px 14px">${estIcon[p.est]} ${p.est}</span>
+        <div class="ficha-prog" style="flex:1">
+          <div class="ficha-pbar"><div class="ficha-pfill" style="width:${pct}%;background:${col}"></div></div>
+          <span class="ficha-pnum">${av}/6 etapas completadas</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ficha-sec" style="margin-bottom:0">
+      <div class="ficha-sec-title">Etapas del proceso</div>
+      <table class="etapas-tbl">
+        <thead>
+          <tr>
+            <th style="width:40%">Etapa</th>
+            <th class="tc" style="width:30%">Estado</th>
+            <th class="tc" style="width:30%;background:#37474F">Form enviado</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${etapas.map(e=>`
+          <tr>
+            <td style="font-size:.75rem;font-weight:600;color:var(--text)">${e.label}</td>
+            <td class="tc">${bEtapa(e.etapa)}</td>
+            <td class="tc" style="${e.form?'':'background:#FAFAFA'}">${e.form ? bForm(e.form) : '<span style="color:#ccc;font-size:.75rem">sin form</span>'}</td>
+          </tr>`).join("")}
+        </tbody>
+      </table>
+    </div>
+    </div>
+
+    ${(p.grec||p.obs) ? `
+    <div class="ficha-sec" style="margin-bottom:0;margin-top:14px">
+      <div class="ficha-sec-title">Recuperación y Observaciones</div>
+      <div class="ficha-grid">
+        ${p.grec?`<div class="ficha-field"><span class="ficha-lbl">Grupo de Recuperación</span><span class="ficha-val">${bGrp(p.grec)}</span></div>`:''}
+        ${p.obs?`<div class="ficha-field full"><span class="ficha-lbl">Observación Clave</span><span class="ficha-val" style="font-style:italic;color:var(--text2)">${p.obs}</span></div>`:''}
+      </div>
+    </div>` : ''}
+
+    <div style="margin-top:18px;padding-top:12px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+      <span style="font-size:.68rem;color:var(--text3);font-style:italic">
+        Fundación Integra · Dirección de Personas · Sección Liderazgo y Formación
+      </span>
+      <button class="btn-print-ficha" onclick="printFicha()">🖨 Imprimir ficha</button>
+    </div>
+  `;
+  document.getElementById("overlay").classList.add("open");
+}
+
+function closeModal(e){
+  if(e===null||e.target===document.getElementById("overlay"))
+    document.getElementById("overlay").classList.remove("open");
+}
+
+function printFicha(){
+  window.print();
+}
+
+
+// ── TABS ──
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  document.querySelector(`.tab[onclick="switchTab('${name}')"]`).classList.add('active');
+  if(name==='estadisticas') renderStats();
+}
+
+// ── FILTROS ESTADÍSTICAS ──
+const SF={estado:"all",prof:"all",tipo:"all",mes:"all",grp:"all"};
+
+function setupStatChips(id,key){
+  document.getElementById(id).querySelectorAll(".chip").forEach(ch=>{
+    ch.addEventListener("click",()=>{
+      document.getElementById(id).querySelectorAll(".chip").forEach(c=>c.classList.remove("on"));
+      ch.classList.add("on"); SF[key]=ch.dataset.v; renderStats();
+    });
+  });
+}
+
+function resetStats(){
+  Object.keys(SF).forEach(k=>SF[k]="all");
+  ["sf-estado","sf-prof","sf-tipo","sf-mes","sf-grp"].forEach(id=>{
+    const el=document.getElementById(id);
+    el.querySelectorAll(".chip").forEach(c=>c.classList.remove("on"));
+    el.querySelector('[data-v="all"]').classList.add("on");
+  });
+  renderStats();
+}
+
+function filteredData(){
+  return D.filter(p=>
+    (SF.estado==="all"||p.est===SF.estado)&&
+    (SF.prof  ==="all"||p.prof===SF.prof)&&
+    (SF.tipo  ==="all"||p.tipo===SF.tipo)&&
+    (SF.mes   ==="all"||p.mes===SF.mes)&&
+    (SF.grp   ==="all"||p.grp===SF.grp)
+  );
+}
+
+// ── ESTADÍSTICAS ──
+function renderStats(){
+  const data = filteredData();
+  const total = data.length;
+  const fin   = data.filter(p=>p.est==="Completa").length;
+  const cur   = data.filter(p=>p.est==="En curso").length;
+  const inc   = data.filter(p=>p.est==="Incompleta").length;
+
+  document.getElementById('st-total').textContent = total;
+  document.getElementById('st-fin').textContent   = fin;
+  document.getElementById('st-cur').textContent   = cur;
+  document.getElementById('st-inc').textContent   = inc;
+
+  // Donut estado
+  donut('donut-estado','legend-estado',[
+    {label:'Completa',  val:fin, color:'#4CAF50'},
+    {label:'En Curso',  val:cur, color:'#FF9800'},
+    {label:'Incompleta',val:inc, color:'#F44336'},
+  ], total);
+
+  // Barras por categoría
+  const glosas = {};
+  data.forEach(p=>{ glosas[p.glosa]=(glosas[p.glosa]||0)+1; });
+  hbars('bars-glosa', Object.entries(glosas).sort((a,b)=>b[1]-a[1]), '#4A7CB5', total);
+
+  // Barras avance por etapa
+  const etapas = [
+    {label:'Charla de Inducción',        real: data.filter(p=>p.charla==='Realizada'||p.charla==='No aplica').length},
+    {label:'Entrega Docs.',              real: data.filter(p=>p.docs==='Realizada'||p.docs==='No aplica').length},
+    {label:'Visita a JI',               real: data.filter(p=>p.visita==='Realizada'||p.visita==='No aplica').length},
+    {label:'Entrevista Inicial',         real: data.filter(p=>p.entrev==='Realizada'||p.entrev==='No aplica').length},
+    {label:'Retroalimentación 3 Meses', real: data.filter(p=>p.r3==='Realizada'||p.r3==='No aplica').length},
+    {label:'Retroalimentación 6 Meses', real: data.filter(p=>p.r6==='Realizada'||p.r6==='No aplica').length},
+  ];
+  const el = document.getElementById('bars-etapas');
+  el.innerHTML = etapas.map(e=>{
+    const pct = total ? Math.round(e.real/total*100) : 0;
+    const col = pct>=80?'#4CAF50':pct>=50?'#FF9800':'#F44336';
+    return `<div class="hbar-row">
+      <span class="hbar-label">${e.label}</span>
+      <div class="hbar-track">
+        <div class="hbar-fill" style="width:${pct}%;background:${col}">
+          <span>${e.real}/${total}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Barras por mes
+  const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                 'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const mesData = meses.map(m=>([m, data.filter(p=>p.mes===m).length]))
+                       .filter(([,v])=>v>0);
+  const maxMes = Math.max(...mesData.map(([,v])=>v), 1);
+  document.getElementById('bars-mes').innerHTML = mesData.length
+    ? mesData.map(([m,v])=>{
+        const pct = Math.round(v/maxMes*100);
+        return `<div class="hbar-row">
+          <span class="hbar-label">${m}</span>
+          <div class="hbar-track">
+            <div class="hbar-fill" style="width:${pct}%;background:#4A7CB5">
+              <span>${v}</span>
+            </div>
+          </div>
+        </div>`;
+      }).join('')
+    : '<p style="color:var(--text3);font-size:.8rem;padding:12px 0">Sin datos para los filtros seleccionados</p>';
+
+  // Donut tipo proceso
+  const tipos = {};
+  data.forEach(p=>{ tipos[p.tipo]=(tipos[p.tipo]||0)+1; });
+  const tipoColors = {'Contratación':'#4A7CB5','Reingreso':'#FF9800',
+                      'Externo':'#4CAF50','Interno':'#9C27B0','Movilidad':'#00BCD4'};
+  donut('donut-tipo','legend-tipo',
+    Object.entries(tipos).map(([k,v])=>({label:k,val:v,color:tipoColors[k]||'#888'})),
+    total);
+}
+
+function hbars(elId, data, color, total){
+  const max = Math.max(...data.map(([,v])=>v), 1);
+  document.getElementById(elId).innerHTML = data.map(([label,val])=>{
+    const pct = Math.round(val/max*100);
+    return `<div class="hbar-row">
+      <span class="hbar-label">${label}</span>
+      <div class="hbar-track">
+        <div class="hbar-fill" style="width:${pct}%;background:${color}">
+          <span>${val}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function donut(svgId, legendId, data, total){
+  const svg   = document.getElementById(svgId);
+  const cx=55, cy=55, r=38, ri=24;
+  let startAngle = -Math.PI/2;
+  const sum = data.reduce((a,d)=>a+d.val,0) || 1;
+  let paths = '';
+  data.forEach(d=>{
+    if(!d.val) return;
+    const angle = (d.val/sum)*2*Math.PI;
+    const end   = startAngle + angle;
+    const x1=cx+r*Math.cos(startAngle), y1=cy+r*Math.sin(startAngle);
+    const x2=cx+r*Math.cos(end),        y2=cy+r*Math.sin(end);
+    const xi1=cx+ri*Math.cos(end),      yi1=cy+ri*Math.sin(end);
+    const xi2=cx+ri*Math.cos(startAngle),yi2=cy+ri*Math.sin(startAngle);
+    const large = angle>Math.PI?1:0;
+    paths += `<path d="M${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2}
+      L${xi1},${yi1} A${ri},${ri} 0 ${large},0 ${xi2},${yi2} Z"
+      fill="${d.color}" opacity="0.9"/>`;
+    startAngle = end;
+  });
+  paths += `<text x="${cx}" y="${cy-6}" text-anchor="middle" font-size="18"
+    font-weight="700" fill="var(--navy)" font-family="Outfit,sans-serif">${total}</text>
+    <text x="${cx}" y="${cy+10}" text-anchor="middle" font-size="9"
+    fill="var(--text3)" font-family="Outfit,sans-serif">personas</text>`;
+  svg.innerHTML = paths;
+
+  document.getElementById(legendId).innerHTML = data.map(d=>`
+    <div class="leg-item">
+      <span class="leg-dot" style="background:${d.color}"></span>
+      <span>${d.label}</span>
+      <span class="leg-val">${d.val}</span>
+    </div>`).join('');
+}
+
+// ── FILTROS ──
+const F={estado:"all",prof:"all",tipo:"all",mes:"all",grp:"all"};
+
+function setupChips(id,key){
+  document.getElementById(id).querySelectorAll(".chip").forEach(ch=>{
+    ch.addEventListener("click",()=>{
+      document.getElementById(id).querySelectorAll(".chip").forEach(c=>c.classList.remove("on"));
+      ch.classList.add("on"); F[key]=ch.dataset.v; apply();
+    });
+  });
+}
+
+function reset(){
+  Object.keys(F).forEach(k=>F[k]="all");
+  ["f-estado","f-prof","f-tipo","f-mes","f-grp"].forEach(id=>{
+    const el=document.getElementById(id);
+    el.querySelectorAll(".chip").forEach(c=>c.classList.remove("on"));
+    el.querySelector('[data-v="all"]').classList.add("on");
+  });
+  apply();
+}
+
+function apply(){
+  let vis=0;
+  document.querySelectorAll("#tbody tr").forEach(tr=>{
+    const p=D[+tr.dataset.i];
+    const ok=(F.estado==="all"||p.est===F.estado)&&
+             (F.prof  ==="all"||p.prof===F.prof)&&
+             (F.tipo  ==="all"||p.tipo===F.tipo)&&
+             (F.mes   ==="all"||p.mes===F.mes)&&
+             (F.grp   ==="all"||p.grp===F.grp);
+    tr.classList.toggle("hidden",!ok);
+    if(ok) vis++;
+  });
+  document.getElementById("cnt-vis").textContent=vis;
+  document.getElementById("empty").style.display=vis===0?"block":"none";
+  updateKPIs();
+  saveData();
+}
+
+function updateKPIs(){
+  const vis=D.filter((_,i)=>!document.querySelector(`#tbody tr[data-i="${i}"]`).classList.contains("hidden"));
+  document.getElementById("kn-total").textContent=vis.length;
+  document.getElementById("kn-fin").textContent=vis.filter(p=>p.est==="Completa").length;
+  document.getElementById("kn-cur").textContent=vis.filter(p=>p.est==="En curso").length;
+  document.getElementById("kn-inc").textContent=vis.filter(p=>p.est==="Incompleta").length;
+}
+
+// ── MODO EDICIÓN ──
+let EDITING = false;
+
+function toggleEdit(){
+  EDITING = !EDITING;
+  document.body.classList.toggle("editing", EDITING);
+  const btn = document.getElementById("btn-edit");
+  btn.classList.toggle("active", EDITING);
+  btn.textContent = EDITING ? "💾 Guardar cambios" : "✏️ Modo edición";
+  // Re-render toda la tabla para mostrar selects o badges
+  document.getElementById("tbody").innerHTML = "";
+  render();
+  apply();
+  if(!EDITING){ saveData(); showToast("✅ Cambios guardados correctamente"); }
+}
+
+function showToast(msg){
+  let t = document.getElementById("toast");
+  if(!t){ t=document.createElement("div"); t.id="toast"; t.className="toast"; document.body.appendChild(t); }
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 2800);
+}
+
+const ETAPA_OPTS = ["Realizada","Pendiente","En proceso","Postergada","No aplica"];
+const FORM_OPTS  = ["Enviado","Pendiente","No aplica"];
+
+const ETAPA_CLS = {Realizada:"s-real",Pendiente:"s-pend","En proceso":"s-enpr",Postergada:"s-post","No aplica":"s-napl"};
+const FORM_CLS  = {Enviado:"sf-env",Pendiente:"sf-pen","No aplica":"sf-na"};
+
+function selEtapa(i, field, val){
+  const cls = ETAPA_CLS[val]||"s-pend";
+  return `<select class="sel-etapa ${cls}" onchange="updateField(${i},'${field}',this)">
+    ${ETAPA_OPTS.map(o=>`<option value="${o}"${o===val?" selected":""}>${EI[o]||"—"} ${o}</option>`).join("")}
+  </select>`;
+}
+function selForm(i, field, val){
+  const cls = FORM_CLS[val]||"sf-pen";
+  return `<select class="sel-form ${cls}" onchange="updateField(${i},'${field}',this)">
+    ${FORM_OPTS.map(o=>`<option value="${o}"${o===val?" selected":""}>${FI[o]||"—"}</option>`).join("")}
+  </select>`;
+}
+
+
+function updateTextField(i, field, val){
+  snapshot();
+  D[i][field] = val;
+  saveData();
+  // Si cambia prof, actualizar el badge en ficha si estuviera abierta
+  // No necesita re-render completo, el input ya muestra el valor
+}
+
+function updateField(i, field, sel){
+  snapshot();
+  D[i][field] = sel.value;
+  // actualizar clase visual del select
+  if(field.startsWith("form_")){
+    sel.className = "sel-form " + (FORM_CLS[sel.value]||"sf-pen");
+  } else {
+    sel.className = "sel-etapa " + (ETAPA_CLS[sel.value]||"s-pend");
+  }
+  // Recalcular estado general automáticamente
+  const p = D[i];
+  const etapasKey = [p.charla,p.visita,p.entrev,p.r3,p.r6,p.docs];
+  const realCount = etapasKey.filter(e=>e==="Realizada"||e==="No aplica").length;
+  const postCount = etapasKey.filter(e=>e==="Postergada").length;
+  const enprCount = etapasKey.filter(e=>e==="En proceso").length;
+  if(realCount === 6) p.est = "Completa";
+  else if(postCount > 0) p.est = "Incompleta";
+  else p.est = "En curso";
+  // Refrescar la fila
+  const tr = document.querySelector(`#tbody tr[data-i="${i}"]`);
+  if(tr){
+    // Actualizar celda de estado
+    tr.querySelector("td.td-est").innerHTML = bEst(p.est);
+    // Actualizar barra de avance
+    const av = avance(p);
+    tr.querySelector("td.td-av").innerHTML = progBar(av);
+  }
+  updateKPIs();
+}
+
+function render(){
+  const tb=document.getElementById("tbody");
+  D.forEach((p,i)=>{
+    const tr=document.createElement("tr");
+    tr.dataset.i=i;
+    const av=avance(p);
+    tr.innerHTML=`
+      <td class="td-rut">${p.rut}</td>
+      <td><div class="td-nombre">${p.nombre}</div><div class="td-sub">${p.cargo}</div><div class="td-sub" style="color:#8A9AB2;font-size:.64rem">${p.unidad}</div></td>
+      <td class="td-fecha" style="white-space:nowrap;font-family:'DM Mono',monospace;font-size:.7rem;color:var(--text2)">${p.fecha}</td>
+      <td style="white-space:nowrap">${p.mes}</td>
+      <td>${bGrp(p.grp)}</td>
+      <td>${bTipo(p.tipo)}</td>
+      <td>${bPsi(p.psi,i)}</td>
+      <td>${bProf(p.prof,i)}</td>
+      <td class="td-est">${bEst(p.est)}</td>
+      <td class="tc tc-etapa">${EDITING ? selEtapa(i,"charla",p.charla) : bEtapa(p.charla)}</td>
+      <td class="tc tc-etapa">${EDITING ? selEtapa(i,"docs",p.docs)   : bEtapa(p.docs)}</td>
+      <td class="tc tc-etapa">${EDITING ? selEtapa(i,"visita",p.visita): bEtapa(p.visita)}</td>
+      <td class="tc tc-etapa" style="background:#F5F6F8">${EDITING ? selForm(i,"form_entrev",p.form_entrev) : bForm(p.form_entrev)}</td>
+      <td class="tc tc-etapa">${EDITING ? selEtapa(i,"entrev",p.entrev): bEtapa(p.entrev)}</td>
+      <td class="tc tc-etapa" style="background:#F5F6F8">${EDITING ? selForm(i,"form_r3",p.form_r3) : bForm(p.form_r3)}</td>
+      <td class="tc tc-etapa">${EDITING ? selEtapa(i,"r3",p.r3)       : bEtapa(p.r3)}</td>
+      <td class="tc tc-etapa" style="background:#F5F6F8">${EDITING ? selForm(i,"form_r6",p.form_r6) : bForm(p.form_r6)}</td>
+      <td class="tc tc-etapa">${EDITING ? selEtapa(i,"r6",p.r6)       : bEtapa(p.r6)}</td>
+      <td class="tc tc-etapa">${EDITING ? selEtapa(i,"docs",p.docs)   : bEtapa(p.docs)}</td>
+      <td class="td-av">${progBar(av)}</td>
+      <td>${bGrp(p.grec)}</td>
+      <td class="td-obs">${p.obs||"—"}</td>
+      <td class="tc"><button class="btn-ficha" onclick="openFicha(${i})">📋 Ver ficha</button></td>`;
+    tb.appendChild(tr);
+  });
+  document.getElementById("cnt-tot").textContent=D.length;
+}
+
+document.getElementById("hdr-date").textContent=
+  new Date().toLocaleDateString("es-CL",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+
+
+// ── MODAL AGREGAR TRABAJADOR ──
+function openAdd(){
+  // Resetear form
+  ["af-rut","af-nombre","af-cargo","af-unidad","af-obs"].forEach(id=>{
+    document.getElementById(id).value="";
+  });
+  document.getElementById("af-fecha").value="";
+  document.getElementById("af-psi").value="Omar Rojas";
+  // Resetear selects a primera opción
+  ["af-mes","af-vinculo","af-glosa","af-tipo","af-grp","af-prof","af-est",
+   "af-charla","af-docs","af-visita","af-entrev","af-r3","af-r6"].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.selectedIndex=0;
+  });
+  document.getElementById("af-mes").value="Abril";
+  document.getElementById("af-grp").value="G4";
+  document.getElementById("add-err").style.display="none";
+  document.getElementById("add-overlay").classList.add("open");
+}
+
+function closeAdd(e){
+  if(e===null||e.target===document.getElementById("add-overlay"))
+    document.getElementById("add-overlay").classList.remove("open");
+}
+
+function confirmAdd(){
+  const rut    = document.getElementById("af-rut").value.trim();
+  const nombre = document.getElementById("af-nombre").value.trim();
+  const cargo  = document.getElementById("af-cargo").value.trim();
+  const fechaRaw = document.getElementById("af-fecha").value;
+
+  if(!rut||!nombre||!cargo||!fechaRaw){
+    document.getElementById("add-err").style.display="block";
+    return;
+  }
+  document.getElementById("add-err").style.display="none";
+
+  // Formatear fecha de YYYY-MM-DD a DD-MM-YYYY
+  const [y,m,d] = fechaRaw.split("-");
+  const fechaFmt = `${d}-${m}-${y}`;
+
+  const nuevo = {
+    rut,
+    nombre,
+    cargo,
+    vinculo:  document.getElementById("af-vinculo").value,
+    glosa:    document.getElementById("af-glosa").value,
+    unidad:   document.getElementById("af-unidad").value.trim()||"—",
+    fecha:    fechaFmt,
+    mes:      document.getElementById("af-mes").value,
+    grp:      document.getElementById("af-grp").value,
+    tipo:     document.getElementById("af-tipo").value,
+    psi:      document.getElementById("af-psi").value.trim()||"—",
+    prof:     document.getElementById("af-prof").value,
+    est:      document.getElementById("af-est").value,
+    charla:   document.getElementById("af-charla").value,
+    visita:   document.getElementById("af-visita").value,
+    form_entrev:"Pendiente",
+    entrev:   document.getElementById("af-entrev").value,
+    form_r3:  "Pendiente",
+    r3:       document.getElementById("af-r3").value,
+    form_r6:  "Pendiente",
+    r6:       document.getElementById("af-r6").value,
+    docs:     document.getElementById("af-docs").value,
+    grec:     "",
+    obs:      document.getElementById("af-obs").value.trim()||""
+  };
+
+  snapshot();
+  D.push(nuevo);
+
+  // Re-render tabla completa
+  document.getElementById("tbody").innerHTML="";
+  render();
+  apply();
+
+  document.getElementById("add-overlay").classList.remove("open");
+  saveData();
+  showToast(`✅ ${nuevo.nombre} agregado/a correctamente`);
+}
+
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){
+    closeAdd(null);
+    closeModal(null);
+  }
+});
+
+setupChips("f-estado","estado");
+setupChips("f-prof","prof");
+setupChips("f-tipo","tipo");
+setupChips("f-mes","mes");
+setupChips("f-grp","grp");
+
+setupStatChips("sf-estado","estado");
+setupStatChips("sf-prof","prof");
+setupStatChips("sf-tipo","tipo");
+setupStatChips("sf-mes","mes");
+setupStatChips("sf-grp","grp");
+
+loadData(); render(); apply(); refreshUndoBtn();
+// Iniciar conexión OneDrive
+initMSAL().catch(()=>setSyncStatus("offline","No conectado a OneDrive", true));
+
+// ── SCROLL DOBLE SINCRONIZADO ──
+(function(){
+  const top = document.getElementById("scroll-top");
+  const wrap = document.getElementById("tbl-wrap");
+  const inner = document.getElementById("scroll-top-inner");
+
+  function syncWidth(){
+    const tbl = document.getElementById("tbl");
+    if(tbl) inner.style.width = tbl.scrollWidth + "px";
+  }
+  syncWidth();
+  window.addEventListener("resize", syncWidth);
+
+  top.addEventListener("scroll", ()=>{ wrap.scrollLeft = top.scrollLeft; });
+  wrap.addEventListener("scroll", ()=>{ top.scrollLeft = wrap.scrollLeft; });
+})();
+</script>
+</body>
+</html>
